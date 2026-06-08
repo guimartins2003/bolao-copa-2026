@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-copa-green hover:bg-green-800 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200;
+  }
+  .btn-secondary {
+    @apply bg-copa-navy hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  .card {
+    @apply bg-white rounded-xl shadow-md p-4 border border-gray-100;
+  }
+  .input-score {
+    @apply w-14 h-10 text-center text-lg font-bold border-2 border-gray-300 rounded-lg focus:border-copa-green focus:outline-none transition-colors;
+  }
+  .tab-active {
+    @apply border-b-2 border-copa-green text-copa-green font-semibold;
+  }
+  .tab-inactive {
+    @apply text-gray-500 hover:text-gray-700;
+  }
+}
