@@ -96,9 +96,73 @@ export const matches: Match[] = [
   { id: 'L4', group: 'L', stage: 'Fase de Grupos', date: '2026-06-23', time: '20:00', homeTeam: 'Panama', awayTeam: 'Croacia', homeFlag: '\u{1F1F5}\u{1F1E6}', awayFlag: '\u{1F1ED}\u{1F1F7}' },
   { id: 'L5', group: 'L', stage: 'Fase de Grupos', date: '2026-06-27', time: '18:00', homeTeam: 'Panama', awayTeam: 'Inglaterra', homeFlag: '\u{1F1F5}\u{1F1E6}', awayFlag: '\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}' },
   { id: 'L6', group: 'L', stage: 'Fase de Grupos', date: '2026-06-27', time: '18:00', homeTeam: 'Croacia', awayTeam: 'Gana', homeFlag: '\u{1F1ED}\u{1F1F7}', awayFlag: '\u{1F1EC}\u{1F1ED}' },
+
+  // ============================================================
+  // =================== FASE ELIMINATORIA ======================
+  // ============================================================
+
+  // ============ SEGUNDA FASE (Round of 32) ============
+  { id: 'R32_1', group: 'R32', stage: 'Segunda Fase', date: '2026-06-28', time: '16:00', homeTeam: 'Africa do Sul', awayTeam: 'Canada', homeFlag: '\u{1F1FF}\u{1F1E6}', awayFlag: '\u{1F1E8}\u{1F1E6}' },
+  { id: 'R32_2', group: 'R32', stage: 'Segunda Fase', date: '2026-06-29', time: '14:00', homeTeam: 'Brasil', awayTeam: 'Japao', homeFlag: '\u{1F1E7}\u{1F1F7}', awayFlag: '\u{1F1EF}\u{1F1F5}' },
+  { id: 'R32_3', group: 'R32', stage: 'Segunda Fase', date: '2026-06-29', time: '17:30', homeTeam: 'Alemanha', awayTeam: 'Paraguai', homeFlag: '\u{1F1E9}\u{1F1EA}', awayFlag: '\u{1F1F5}\u{1F1FE}' },
+  { id: 'R32_4', group: 'R32', stage: 'Segunda Fase', date: '2026-06-29', time: '22:00', homeTeam: 'Holanda', awayTeam: 'Marrocos', homeFlag: '\u{1F1F3}\u{1F1F1}', awayFlag: '\u{1F1F2}\u{1F1E6}' },
+  { id: 'R32_5', group: 'R32', stage: 'Segunda Fase', date: '2026-06-30', time: '14:00', homeTeam: 'Costa do Marfim', awayTeam: 'Noruega', homeFlag: '\u{1F1E8}\u{1F1EE}', awayFlag: '\u{1F1F3}\u{1F1F4}' },
+  { id: 'R32_6', group: 'R32', stage: 'Segunda Fase', date: '2026-06-30', time: '18:00', homeTeam: 'Franca', awayTeam: 'Suecia', homeFlag: '\u{1F1EB}\u{1F1F7}', awayFlag: '\u{1F1F8}\u{1F1EA}' },
+  { id: 'R32_7', group: 'R32', stage: 'Segunda Fase', date: '2026-06-30', time: '22:00', homeTeam: 'Mexico', awayTeam: 'Equador', homeFlag: '\u{1F1F2}\u{1F1FD}', awayFlag: '\u{1F1EA}\u{1F1E8}' },
+  { id: 'R32_8', group: 'R32', stage: 'Segunda Fase', date: '2026-07-01', time: '13:00', homeTeam: 'Inglaterra', awayTeam: 'RD Congo', homeFlag: '\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}', awayFlag: '\u{1F1E8}\u{1F1E9}' },
+  { id: 'R32_9', group: 'R32', stage: 'Segunda Fase', date: '2026-07-01', time: '17:00', homeTeam: 'Belgica', awayTeam: 'Senegal', homeFlag: '\u{1F1E7}\u{1F1EA}', awayFlag: '\u{1F1F8}\u{1F1F3}' },
+  { id: 'R32_10', group: 'R32', stage: 'Segunda Fase', date: '2026-07-01', time: '21:00', homeTeam: 'Estados Unidos', awayTeam: 'Bosnia e Herzegovina', homeFlag: '\u{1F1FA}\u{1F1F8}', awayFlag: '\u{1F1E7}\u{1F1E6}' },
+  { id: 'R32_11', group: 'R32', stage: 'Segunda Fase', date: '2026-07-02', time: '16:00', homeTeam: 'Espanha', awayTeam: 'Austria', homeFlag: '\u{1F1EA}\u{1F1F8}', awayFlag: '\u{1F1E6}\u{1F1F9}' },
+  { id: 'R32_12', group: 'R32', stage: 'Segunda Fase', date: '2026-07-02', time: '20:00', homeTeam: 'Portugal', awayTeam: 'Croacia', homeFlag: '\u{1F1F5}\u{1F1F9}', awayFlag: '\u{1F1ED}\u{1F1F7}' },
+  { id: 'R32_13', group: 'R32', stage: 'Segunda Fase', date: '2026-07-03', time: '00:00', homeTeam: 'Suica', awayTeam: 'Ira', homeFlag: '\u{1F1E8}\u{1F1ED}', awayFlag: '\u{1F1EE}\u{1F1F7}' },
+  { id: 'R32_14', group: 'R32', stage: 'Segunda Fase', date: '2026-07-03', time: '15:00', homeTeam: 'Australia', awayTeam: 'Egito', homeFlag: '\u{1F1E6}\u{1F1FA}', awayFlag: '\u{1F1EA}\u{1F1EC}' },
+  { id: 'R32_15', group: 'R32', stage: 'Segunda Fase', date: '2026-07-03', time: '19:00', homeTeam: 'Argentina', awayTeam: 'Cabo Verde', homeFlag: '\u{1F1E6}\u{1F1F7}', awayFlag: '\u{1F1E8}\u{1F1FB}' },
+  { id: 'R32_16', group: 'R32', stage: 'Segunda Fase', date: '2026-07-03', time: '22:30', homeTeam: 'Colombia', awayTeam: 'Gana', homeFlag: '\u{1F1E8}\u{1F1F4}', awayFlag: '\u{1F1EC}\u{1F1ED}' },
+
+  // ============ OITAVAS DE FINAL (Round of 16) ============
+  { id: 'R16_1', group: 'R16', stage: 'Oitavas de Final', date: '2026-07-04', time: '14:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'R16_2', group: 'R16', stage: 'Oitavas de Final', date: '2026-07-04', time: '18:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'R16_3', group: 'R16', stage: 'Oitavas de Final', date: '2026-07-05', time: '17:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'R16_4', group: 'R16', stage: 'Oitavas de Final', date: '2026-07-05', time: '21:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'R16_5', group: 'R16', stage: 'Oitavas de Final', date: '2026-07-06', time: '16:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'R16_6', group: 'R16', stage: 'Oitavas de Final', date: '2026-07-06', time: '21:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'R16_7', group: 'R16', stage: 'Oitavas de Final', date: '2026-07-07', time: '13:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'R16_8', group: 'R16', stage: 'Oitavas de Final', date: '2026-07-07', time: '17:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+
+  // ============ QUARTAS DE FINAL ============
+  { id: 'QF1', group: 'QF', stage: 'Quartas de Final', date: '2026-07-09', time: '17:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'QF2', group: 'QF', stage: 'Quartas de Final', date: '2026-07-10', time: '16:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'QF3', group: 'QF', stage: 'Quartas de Final', date: '2026-07-11', time: '18:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'QF4', group: 'QF', stage: 'Quartas de Final', date: '2026-07-11', time: '22:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+
+  // ============ SEMIFINAIS ============
+  { id: 'SF1', group: 'SF', stage: 'Semifinal', date: '2026-07-14', time: '16:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+  { id: 'SF2', group: 'SF', stage: 'Semifinal', date: '2026-07-15', time: '16:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+
+  // ============ DISPUTA DE 3o LUGAR ============
+  { id: 'TPP', group: 'FIN', stage: 'Disputa de 3o Lugar', date: '2026-07-18', time: '17:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
+
+  // ============ FINAL ============
+  { id: 'FIN', group: 'FIN', stage: 'Final', date: '2026-07-19', time: '16:00', homeTeam: 'A definir', awayTeam: 'A definir', homeFlag: '\u{1F3F3}\u{FE0F}', awayFlag: '\u{1F3F3}\u{FE0F}' },
 ]
 
 export const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+
+export const knockoutStages = [
+  { key: 'R32', label: '2a Fase' },
+  { key: 'R16', label: 'Oitavas' },
+  { key: 'QF', label: 'Quartas' },
+  { key: 'SF', label: 'Semis' },
+  { key: 'FIN', label: 'Finais' },
+]
+
+export const stageLabels: Record<string, string> = {
+  'R32': 'Segunda Fase',
+  'R16': 'Oitavas de Final',
+  'QF': 'Quartas de Final',
+  'SF': 'Semifinal',
+  'FIN': 'Finais',
+}
 
 export function getMatchesByGroup(group: string): Match[] {
   return matches.filter(m => m.group === group)
@@ -119,4 +183,13 @@ export function isPredictionLocked(dateStr: string, time: string): boolean {
   // Subtrai 1 hora para o limite
   const lockTime = new Date(matchDate.getTime() - 60 * 60 * 1000)
   return new Date() >= lockTime
+}
+
+export function isKnockoutStage(group: string): boolean {
+  return ['R32', 'R16', 'QF', 'SF', 'FIN'].includes(group)
+}
+
+export function getStageLabel(group: string): string {
+  if (isKnockoutStage(group)) return stageLabels[group] || group
+  return `Grupo ${group}`
 }

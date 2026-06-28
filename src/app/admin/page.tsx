@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { matches, groups, formatDate } from '@/lib/matches-data'
+import { matches, groups, knockoutStages, formatDate, isKnockoutStage } from '@/lib/matches-data'
 import { Result } from '@/lib/types'
 
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'bolao2026admin'
@@ -155,6 +155,17 @@ export default function AdminPage() {
               }`}
             >
               Grupo {g}
+            </button>
+          ))}
+          {knockoutStages.map(s => (
+            <button
+              key={s.key}
+              onClick={() => setSelectedGroup(s.key)}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                selectedGroup === s.key ? 'bg-copa-blue text-white' : 'bg-white text-copa-blue hover:bg-blue-50 border border-copa-blue'
+              }`}
+            >
+              {s.label}
             </button>
           ))}
         </div>

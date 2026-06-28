@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { matches, groups, formatDate, isPredictionLocked } from '@/lib/matches-data'
+import { matches, groups, knockoutStages, getStageLabel, formatDate, isPredictionLocked, isKnockoutStage } from '@/lib/matches-data'
 import { Player, Prediction, Result, RankingEntry } from '@/lib/types'
 
 async function hashPassword(password: string): Promise<string> {
@@ -345,6 +345,17 @@ export default function Home() {
                   Grupo {g}
                 </button>
               ))}
+              {knockoutStages.map(s => (
+                <button
+                  key={s.key}
+                  onClick={() => setSelectedGroup(s.key)}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    selectedGroup === s.key ? 'bg-copa-blue text-white' : 'bg-white text-copa-blue hover:bg-blue-50 border border-copa-blue'
+                  }`}
+                >
+                  {s.label}
+                </button>
+              ))}
             </div>
 
             {/* Matches */}
@@ -359,8 +370,10 @@ export default function Home() {
                 return (
                   <div key={match.id} className="card">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-semibold text-copa-green bg-green-50 px-2 py-0.5 rounded">
-                        Grupo {match.group}
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded ${
+                        isKnockoutStage(match.group) ? 'text-copa-blue bg-blue-50' : 'text-copa-green bg-green-50'
+                      }`}>
+                        {isKnockoutStage(match.group) ? match.stage : `Grupo ${match.group}`}
                       </span>
                       <span className="text-xs text-gray-400">{formatDate(match.date, match.time)}</span>
                     </div>
@@ -555,9 +568,17 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Fases do torneio</h3>
-                <p className="text-sm">
-                  Inicialmente o bolao cobre os 72 jogos da fase de grupos.
-                  Jogos da fase eliminatoria serao adicionados conforme o torneio avanca.
+                <ul className="list-disc list-inside space-y-1 text-sm">
+                  <li>Fase de Grupos: 72 jogos (12 grupos de 4 selecoes)</li>
+                  <li>Segunda Fase: 16 jogos (32 classificados)</li>
+                  <li>Oitavas de Final: 8 jogos</li>
+                  <li>Quartas de Final: 4 jogos</li>
+                  <li>Semifinais: 2 jogos</li>
+                  <li>Disputa de 3o lugar e Final</li>
+                </ul>
+                <p className="text-sm mt-2 text-gray-500">
+                  Os jogos das fases seguintes aparecem como &quot;A definir&quot; ate que os times sejam confirmados.
+                  A pontuacao e a mesma em todas as fases.
                 </p>
               </div>
             </div>
