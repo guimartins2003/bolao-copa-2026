@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { matches, groups, knockoutStages, getStageLabel, formatDate, isPredictionLocked, isKnockoutStage } from '@/lib/matches-data'
-import { Player, Prediction, Result, RankingEntry } from '@/lib/types'
+import { matches, groups, knockoutStages, getStageLabel, formatDate, isPredictionLocked, isKnockoutStage, applyTeamOverrides } from '@/lib/matches-data'
+import { Player, Prediction, Result, RankingEntry, MatchTeam } from '@/lib/types'
 
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder()
@@ -24,6 +24,7 @@ export default function Home() {
   const [predictions, setPredictions] = useState<Record<string, { home: string; away: string }>>({})
   const [savedPredictions, setSavedPredictions] = useState<Prediction[]>([])
   const [results, setResults] = useState<Result[]>([])
+  const [matchTeams, setMatchTeams] = useState<MatchTeam[]>([])
   const [allPredictions, setAllPredictions] = useState<Prediction[]>([])
   const [allPlayers, setAllPlayers] = useState<Player[]>([])
   const [saving, setSaving] = useState<string | null>(null)
@@ -31,14 +32,16 @@ export default function Home() {
   const [loginError, setLoginError] = useState('')
 
   const loadData = useCallback(async () => {
-    const [resResults, resPlayers, resPredictions] = await Promise.all([
+    const [resResults, resPlayers, resPredictions, resTeams] = await Promise.all([
       supabase.from('results').select('*'),
       supabase.from('players').select('*'),
       supabase.from('predictions').select('*'),
+      supabase.from('match_teams').select('*'),
     ])
     if (resResults.data) setResults(resResults.data)
     if (resPlayers.data) setAllPlayers(resPlayers.data)
     if (resPredictions.data) setAllPredictions(resPredictions.data)
+    if (resTeams.data) setMatchTeams(resTeams.data)
   }, [])
 
   useEffect(() => {
@@ -204,7 +207,8 @@ export default function Home() {
     return isPredictionLocked(dateStr, time)
   }
 
-  const filteredMatches = selectedGroup === 'all' ? matches : matches.filter(m => m.group === selectedGroup)
+  const effectiveMatches = applyTeamOverrides(matches, matchTeams)
+  const filteredMatches = selectedGroup === 'all' ? effectiveMatches : effectiveMatches.filter(m => m.group === selectedGroup)
 
   if (loading) {
     return (

@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { matches, groups, knockoutStages, formatDate, isKnockoutStage } from '@/lib/matches-data'
-import { Result } from '@/lib/types'
+import { matches, groups, knockoutStages, formatDate, isKnockoutStage, applyTeamOverrides } from '@/lib/matches-data'
+import { Result, MatchTeam } from '@/lib/types'
 
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'bolao2026admin'
 
@@ -12,6 +12,9 @@ export default function AdminPage() {
   const [password, setPassword] = useState('')
   const [results, setResults] = useState<Result[]>([])
   const [scores, setScores] = useState<Record<string, { home: string; away: string }>>({})
+  const [matchTeams, setMatchTeams] = useState<MatchTeam[]>([])
+  const [teamEdits, setTeamEdits] = useState<Record<string, { homeTeam: string; awayTeam: string; homeFlag: string; awayFlag: string }>>({})
+  const [savingTeams, setSavingTeams] = useState<string | null>(null)
   const [saving, setSaving] = useState<string | null>(null)
   const [selectedGroup, setSelectedGroup] = useState('A')
   const [stats, setStats] = useState({ players: 0, predictions: 0, results: 0 })
@@ -25,6 +28,18 @@ export default function AdminPage() {
         scoreMap[r.match_id] = { home: String(r.home_score), away: String(r.away_score) }
       })
       setScores(scoreMap)
+    }
+  }, [])
+
+  const loadTeams = useCallback(async () => {
+    const { data } = await supabase.from('match_teams').select('*')
+    if (data) {
+      setMatchTeams(data)
+      const editMap: Record<string, { homeTeam: string; awayTeam: string; homeFlag: string; awayFlag: string }> = {}
+      data.forEach(t => {
+        editMap[t.match_id] = { homeTeam: t.home_team, awayTeam: t.away_team, homeFlag: t.home_flag, awayFlag: t.away_flag }
+      })
+      setTeamEdits(editMap)
     }
   }, [])
 
@@ -44,9 +59,10 @@ export default function AdminPage() {
   useEffect(() => {
     if (authenticated) {
       loadResults()
+      loadTeams()
       loadStats()
     }
-  }, [authenticated, loadResults, loadStats])
+  }, [authenticated, loadResults, loadTeams, loadStats])
 
   function handleLogin(e: React.FormEvent) {
     e.preventDefault()
@@ -94,6 +110,50 @@ export default function AdminPage() {
     setSaving(null)
   }
 
+  function handleTeamEditChange(matchId: string, field: 'homeTeam' | 'awayTeam' | 'homeFlag' | 'awayFlag', value: string) {
+    setTeamEdits(prev => ({
+      ...prev,
+      [matchId]: {
+        homeTeam: prev[matchId]?.homeTeam ?? '',
+        awayTeam: prev[matchId]?.awayTeam ?? '',
+        homeFlag: prev[matchId]?.homeFlag ?? '',
+        awayFlag: prev[matchId]?.awayFlag ?? '',
+        [field]: value,
+      },
+    }))
+  }
+
+  async function saveTeams(matchId: string) {
+    const edit = teamEdits[matchId]
+    if (!edit || !edit.homeTeam.trim() || !edit.awayTeam.trim()) return
+
+    setSavingTeams(matchId)
+    await supabase.from('match_teams').upsert(
+      {
+        match_id: matchId,
+        home_team: edit.homeTeam.trim(),
+        away_team: edit.awayTeam.trim(),
+        home_flag: edit.homeFlag.trim(),
+        away_flag: edit.awayFlag.trim(),
+      },
+      { onConflict: 'match_id' }
+    )
+    await loadTeams()
+    setSavingTeams(null)
+  }
+
+  async function resetTeams(matchId: string) {
+    setSavingTeams(matchId)
+    await supabase.from('match_teams').delete().eq('match_id', matchId)
+    setTeamEdits(prev => {
+      const next = { ...prev }
+      delete next[matchId]
+      return next
+    })
+    await loadTeams()
+    setSavingTeams(null)
+  }
+
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-copa-navy to-copa-blue p-4">
@@ -116,7 +176,7 @@ export default function AdminPage() {
     )
   }
 
-  const filteredMatches = matches.filter(m => m.group === selectedGroup)
+  const filteredMatches = applyTeamOverrides(matches, matchTeams).filter(m => m.group === selectedGroup)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -176,12 +236,76 @@ export default function AdminPage() {
             const hasResult = results.some(r => r.match_id === match.id)
             const score = scores[match.id] || { home: '', away: '' }
 
+            const isKnockout = isKnockoutStage(match.group)
+            const teamEdit = teamEdits[match.id] || { homeTeam: '', awayTeam: '', homeFlag: '', awayFlag: '' }
+            const hasCustomTeams = matchTeams.some(t => t.match_id === match.id)
+
             return (
               <div key={match.id} className={`card ${hasResult ? 'border-l-4 border-l-copa-green' : ''}`}>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs text-gray-400">{match.id} - {formatDate(match.date, match.time)}</span>
                   {hasResult && <span className="text-xs text-copa-green font-semibold">Resultado salvo</span>}
                 </div>
+
+                {/* Editar times (apenas fases eliminatorias) */}
+                {isKnockout && (
+                  <div className="mb-3 bg-blue-50 border border-blue-100 rounded-lg p-3">
+                    <div className="text-xs font-semibold text-copa-blue mb-2">Definir times {hasCustomTeams && <span className="text-gray-400 font-normal">(personalizado)</span>}</div>
+                    <div className="grid grid-cols-2 gap-2 mb-2">
+                      <div className="flex gap-1">
+                        <input
+                          type="text"
+                          value={teamEdit.homeFlag}
+                          onChange={e => handleTeamEditChange(match.id, 'homeFlag', e.target.value)}
+                          className="w-12 px-2 py-1.5 border border-gray-300 rounded text-center"
+                          placeholder="🏳️"
+                          maxLength={8}
+                        />
+                        <input
+                          type="text"
+                          value={teamEdit.homeTeam}
+                          onChange={e => handleTeamEditChange(match.id, 'homeTeam', e.target.value)}
+                          className="flex-1 px-2 py-1.5 border border-gray-300 rounded text-sm"
+                          placeholder="Time mandante"
+                        />
+                      </div>
+                      <div className="flex gap-1">
+                        <input
+                          type="text"
+                          value={teamEdit.awayFlag}
+                          onChange={e => handleTeamEditChange(match.id, 'awayFlag', e.target.value)}
+                          className="w-12 px-2 py-1.5 border border-gray-300 rounded text-center"
+                          placeholder="🏳️"
+                          maxLength={8}
+                        />
+                        <input
+                          type="text"
+                          value={teamEdit.awayTeam}
+                          onChange={e => handleTeamEditChange(match.id, 'awayTeam', e.target.value)}
+                          className="flex-1 px-2 py-1.5 border border-gray-300 rounded text-sm"
+                          placeholder="Time visitante"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-center gap-2">
+                      <button
+                        onClick={() => saveTeams(match.id)}
+                        disabled={savingTeams === match.id || !teamEdit.homeTeam.trim() || !teamEdit.awayTeam.trim()}
+                        className="text-xs bg-copa-blue text-white px-3 py-1.5 rounded hover:bg-blue-700 disabled:opacity-50"
+                      >
+                        {savingTeams === match.id ? 'Salvando...' : 'Salvar times'}
+                      </button>
+                      {hasCustomTeams && (
+                        <button
+                          onClick={() => resetTeams(match.id)}
+                          className="text-xs text-red-500 hover:text-red-700 px-3 py-1.5"
+                        >
+                          Restaurar padrao
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex items-center justify-center gap-3">
                   <div className="flex-1 text-right text-sm font-medium">

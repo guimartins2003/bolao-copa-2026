@@ -1,4 +1,4 @@
-import { Match } from './types'
+import { Match, MatchTeam } from './types'
 
 export const matches: Match[] = [
   // ============ GRUPO A ============
@@ -162,6 +162,24 @@ export const stageLabels: Record<string, string> = {
   'QF': 'Quartas de Final',
   'SF': 'Semifinal',
   'FIN': 'Finais',
+}
+
+// Aplica os times definidos pelo admin (tabela match_teams) sobre a lista base.
+// Cada override substitui nome e bandeira do jogo correspondente.
+export function applyTeamOverrides(matchList: Match[], overrides: MatchTeam[]): Match[] {
+  if (!overrides || overrides.length === 0) return matchList
+  const map = new Map(overrides.map(o => [o.match_id, o]))
+  return matchList.map(m => {
+    const o = map.get(m.id)
+    if (!o) return m
+    return {
+      ...m,
+      homeTeam: o.home_team || m.homeTeam,
+      awayTeam: o.away_team || m.awayTeam,
+      homeFlag: o.home_flag || m.homeFlag,
+      awayFlag: o.away_flag || m.awayFlag,
+    }
+  })
 }
 
 export function getMatchesByGroup(group: string): Match[] {

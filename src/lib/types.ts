@@ -31,6 +31,15 @@ export interface Result {
   away_score: number
 }
 
+export interface MatchTeam {
+  id: string
+  match_id: string
+  home_team: string
+  away_team: string
+  home_flag: string
+  away_flag: string
+}
+
 export interface RankingEntry {
   player: Player
   totalPoints: number
