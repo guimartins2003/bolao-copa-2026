@@ -144,33 +144,50 @@ export default function Home() {
     if (!pred || pred.home === '' || pred.away === '' || pred.home === undefined || pred.away === undefined) return
 
     setSaving(matchId)
-    console.log('🔵 Iniciando save para match:', matchId, 'com valores:', pred)
 
     const predData = {
       player_id: player.id,
       match_id: matchId,
       home_score: parseInt(pred.home),
       away_score: parseInt(pred.away),
+      updated_at: new Date().toISOString(),
     }
 
-    console.log('📤 Enviando dados:', predData)
-
     try {
-      const { data, error } = await supabase
+      // Try UPDATE first
+      const { data: updateData, error: updateError, count } = await supabase
+        .from('predictions')
+        .update(predData)
+        .eq('player_id', player.id)
+        .eq('match_id', matchId)
+        .select()
+
+      if (updateError) {
+        console.error('Erro UPDATE:', updateError)
+        setSaving(null)
+        return
+      }
+
+      // If update affected rows, we're done
+      if (updateData && updateData.length > 0) {
+        await loadData()
+        setSaving(null)
+        return
+      }
+
+      // No rows updated, try INSERT
+      const { data: insertData, error: insertError } = await supabase
         .from('predictions')
         .insert(predData)
         .select()
 
-      console.log('✅ Resposta:', { data, error })
-
-      if (error) {
-        console.error('❌ Erro ao salvar:', error)
+      if (insertError) {
+        console.error('Erro INSERT:', insertError)
       } else {
-        console.log('✅ Sucesso! Dados:', data)
         await loadData()
       }
     } catch (err) {
-      console.error('💥 Erro inesperado:', err)
+      console.error('Erro inesperado:', err)
     }
     setSaving(null)
   }
