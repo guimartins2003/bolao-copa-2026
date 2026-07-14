@@ -1,7 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "WebFetch(domain:ge.globo.com)",
+      "WebSearch",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:www.fifa.com)",
+      "WebFetch(domain:www.olympics.com)",
+      "WebFetch(domain:www.skysports.com)",
+      "WebFetch(domain:www.espn.com)",
+      "WebFetch(domain:investnews.com.br)",
+      "WebFetch(domain:www.band.com.br)",
+      "WebFetch(domain:www.nbcsports.com)",
+      "WebFetch(domain:www.si.com)",
+      "WebFetch(domain:www.foxsports.com)",
+      "WebFetch(domain:bleacherreport.com)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(curl -s http://localhost:3000/)"
     ]
   }
 }
