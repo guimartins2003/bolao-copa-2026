@@ -155,37 +155,45 @@ export default function Home() {
 
     try {
       // Try UPDATE first
-      const { data: updateData, error: updateError, count } = await supabase
+      const { error: updateError } = await supabase
         .from('predictions')
         .update(predData)
         .eq('player_id', player.id)
         .eq('match_id', matchId)
-        .select()
 
       if (updateError) {
         console.error('Erro UPDATE:', updateError)
-        setSaving(null)
-        return
       }
 
-      // If update affected rows, we're done
-      if (updateData && updateData.length > 0) {
-        await loadData()
-        setSaving(null)
-        return
-      }
-
-      // No rows updated, try INSERT
-      const { data: insertData, error: insertError } = await supabase
+      // Check if any rows were updated by selecting
+      const { data: existingData, error: selectError } = await supabase
         .from('predictions')
-        .insert(predData)
-        .select()
+        .select('id')
+        .eq('player_id', player.id)
+        .eq('match_id', matchId)
+        .single()
 
-      if (insertError) {
-        console.error('Erro INSERT:', insertError)
-      } else {
-        await loadData()
+      if (selectError && selectError.code !== 'PGRST116') {
+        // Other error than "no rows returned"
+        console.error('Erro SELECT:', selectError)
+        setSaving(null)
+        return
       }
+
+      if (!existingData) {
+        // No rows found, try INSERT
+        const { error: insertError } = await supabase
+          .from('predictions')
+          .insert(predData)
+
+        if (insertError) {
+          console.error('Erro INSERT:', insertError)
+          setSaving(null)
+          return
+        }
+      }
+
+      await loadData()
     } catch (err) {
       console.error('Erro inesperado:', err)
     }
