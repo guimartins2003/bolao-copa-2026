@@ -144,13 +144,16 @@ export default function Home() {
     if (!pred || pred.home === '' || pred.away === '' || pred.home === undefined || pred.away === undefined) return
 
     setSaving(matchId)
-    const { error } = await supabase.from('predictions').upsert({
-      player_id: player.id,
-      match_id: matchId,
-      home_score: parseInt(pred.home),
-      away_score: parseInt(pred.away),
-      updated_at: new Date().toISOString(),
-    })
+    const { error } = await supabase.from('predictions').upsert(
+      {
+        player_id: player.id,
+        match_id: matchId,
+        home_score: parseInt(pred.home),
+        away_score: parseInt(pred.away),
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'player_id,match_id' }
+    ).select()
 
     if (error) {
       console.error('Erro ao salvar palpite:', error)
