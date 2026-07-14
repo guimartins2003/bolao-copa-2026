@@ -56,7 +56,10 @@ export default function Home() {
 
   useEffect(() => {
     if (player) {
+      console.log('👤 Filtrando palpites para player.id:', player.id)
+      console.log('📊 Total de predictions no banco:', allPredictions.length)
       const myPreds = allPredictions.filter(p => p.player_id === player.id)
+      console.log('✅ Palpites do usuário encontrados:', myPreds.length, myPreds)
       const predMap: Record<string, { home: string; away: string }> = {}
       myPreds.forEach(p => {
         predMap[p.match_id] = { home: String(p.home_score), away: String(p.away_score) }
