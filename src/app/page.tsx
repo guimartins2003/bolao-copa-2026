@@ -144,58 +144,19 @@ export default function Home() {
     if (!pred || pred.home === '' || pred.away === '' || pred.home === undefined || pred.away === undefined) return
 
     setSaving(matchId)
+    const { error } = await supabase.from('predictions').upsert(
+      {
+        player_id: player.id,
+        match_id: matchId,
+        home_score: parseInt(pred.home),
+        away_score: parseInt(pred.away),
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'player_id,match_id' }
+    )
 
-    const predData = {
-      player_id: player.id,
-      match_id: matchId,
-      home_score: parseInt(pred.home),
-      away_score: parseInt(pred.away),
-      updated_at: new Date().toISOString(),
-    }
-
-    try {
-      // Try UPDATE first
-      const { error: updateError } = await supabase
-        .from('predictions')
-        .update(predData)
-        .eq('player_id', player.id)
-        .eq('match_id', matchId)
-
-      if (updateError) {
-        console.error('Erro UPDATE:', updateError)
-      }
-
-      // Check if any rows were updated by selecting
-      const { data: existingData, error: selectError } = await supabase
-        .from('predictions')
-        .select('id')
-        .eq('player_id', player.id)
-        .eq('match_id', matchId)
-        .single()
-
-      if (selectError && selectError.code !== 'PGRST116') {
-        // Other error than "no rows returned"
-        console.error('Erro SELECT:', selectError)
-        setSaving(null)
-        return
-      }
-
-      if (!existingData) {
-        // No rows found, try INSERT
-        const { error: insertError } = await supabase
-          .from('predictions')
-          .insert(predData)
-
-        if (insertError) {
-          console.error('Erro INSERT:', insertError)
-          setSaving(null)
-          return
-        }
-      }
-
+    if (!error) {
       await loadData()
-    } catch (err) {
-      console.error('Erro inesperado:', err)
     }
     setSaving(null)
   }
