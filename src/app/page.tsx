@@ -144,34 +144,33 @@ export default function Home() {
     if (!pred || pred.home === '' || pred.away === '' || pred.home === undefined || pred.away === undefined) return
 
     setSaving(matchId)
+    console.log('🔵 Iniciando save para match:', matchId, 'com valores:', pred)
+
     const predData = {
       player_id: player.id,
       match_id: matchId,
       home_score: parseInt(pred.home),
       away_score: parseInt(pred.away),
-      updated_at: new Date().toISOString(),
     }
 
-    try {
-      // Delete existing prediction first, then insert
-      await supabase
-        .from('predictions')
-        .delete()
-        .eq('player_id', player.id)
-        .eq('match_id', matchId)
+    console.log('📤 Enviando dados:', predData)
 
-      // Now insert the new prediction
-      const { error: insertError } = await supabase
+    try {
+      const { data, error } = await supabase
         .from('predictions')
         .insert(predData)
+        .select()
 
-      if (insertError) {
-        console.error('Erro ao salvar palpite:', insertError)
+      console.log('✅ Resposta:', { data, error })
+
+      if (error) {
+        console.error('❌ Erro ao salvar:', error)
       } else {
+        console.log('✅ Sucesso! Dados:', data)
         await loadData()
       }
     } catch (err) {
-      console.error('Erro inesperado:', err)
+      console.error('💥 Erro inesperado:', err)
     }
     setSaving(null)
   }
