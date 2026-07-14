@@ -152,38 +152,26 @@ export default function Home() {
       updated_at: new Date().toISOString(),
     }
 
-    // Try to update first
-    const { error: updateError } = await supabase
-      .from('predictions')
-      .update(predData)
-      .eq('player_id', player.id)
-      .eq('match_id', matchId)
-
-    // If no rows were updated, insert
-    if (updateError) {
-      console.error('Erro ao atualizar palpite:', updateError)
-    } else {
-      // Check if update affected any rows by doing a count
-      const { count } = await supabase
+    try {
+      // Delete existing prediction first, then insert
+      await supabase
         .from('predictions')
-        .select('*', { count: 'exact', head: true })
+        .delete()
         .eq('player_id', player.id)
         .eq('match_id', matchId)
 
-      if (count === 0) {
-        // No rows found, insert instead
-        const { error: insertError } = await supabase
-          .from('predictions')
-          .insert(predData)
+      // Now insert the new prediction
+      const { error: insertError } = await supabase
+        .from('predictions')
+        .insert(predData)
 
-        if (insertError) {
-          console.error('Erro ao inserir palpite:', insertError)
-        } else {
-          await loadData()
-        }
+      if (insertError) {
+        console.error('Erro ao salvar palpite:', insertError)
       } else {
         await loadData()
       }
+    } catch (err) {
+      console.error('Erro inesperado:', err)
     }
     setSaving(null)
   }
