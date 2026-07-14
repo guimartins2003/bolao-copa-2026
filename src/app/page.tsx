@@ -38,6 +38,7 @@ export default function Home() {
       supabase.from('predictions').select('*'),
       supabase.from('match_teams').select('*'),
     ])
+    console.log('📊 loadData - predictions carregadas:', resPredictions.data?.length || 0, resPredictions.data)
     if (resResults.data) setResults(resResults.data)
     if (resPlayers.data) setAllPlayers(resPlayers.data)
     if (resPredictions.data) setAllPredictions(resPredictions.data)
