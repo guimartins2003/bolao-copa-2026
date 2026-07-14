@@ -32,16 +32,34 @@ export default function Home() {
   const [loginError, setLoginError] = useState('')
 
   const loadData = useCallback(async () => {
-    const [resResults, resPlayers, resPredictions, resTeams] = await Promise.all([
+    // Supabase retorna no maximo 1000 linhas por query. Como o total de
+    // palpites ja passa de 1000, buscamos em lotes ate trazer todos.
+    async function fetchAllPredictions(): Promise<Prediction[]> {
+      const pageSize = 1000
+      let from = 0
+      const all: Prediction[] = []
+      while (true) {
+        const { data, error } = await supabase
+          .from('predictions')
+          .select('*')
+          .range(from, from + pageSize - 1)
+        if (error || !data) break
+        all.push(...data)
+        if (data.length < pageSize) break
+        from += pageSize
+      }
+      return all
+    }
+
+    const [resResults, resPlayers, allPreds, resTeams] = await Promise.all([
       supabase.from('results').select('*'),
       supabase.from('players').select('*'),
-      supabase.from('predictions').select('*'),
+      fetchAllPredictions(),
       supabase.from('match_teams').select('*'),
     ])
-    console.log('📊 loadData - predictions carregadas:', resPredictions.data?.length || 0, resPredictions.data)
     if (resResults.data) setResults(resResults.data)
     if (resPlayers.data) setAllPlayers(resPlayers.data)
-    if (resPredictions.data) setAllPredictions(resPredictions.data)
+    setAllPredictions(allPreds)
     if (resTeams.data) setMatchTeams(resTeams.data)
   }, [])
 
@@ -56,18 +74,13 @@ export default function Home() {
 
   useEffect(() => {
     if (player) {
-      console.log('👤 Filtrando palpites para player.id:', player.id)
-      console.log('📊 Total de predictions no banco:', allPredictions.length)
       const myPreds = allPredictions.filter(p => p.player_id === player.id)
-      console.log('✅ Palpites do usuário encontrados:', myPreds.length, myPreds)
       const predMap: Record<string, { home: string; away: string }> = {}
       myPreds.forEach(p => {
         predMap[p.match_id] = { home: String(p.home_score), away: String(p.away_score) }
       })
-      console.log('🗺️ Mapa de palpites:', predMap)
       setPredictions(predMap)
       setSavedPredictions(myPreds)
-      console.log('✅ Estado atualizado! predictions.length:', Object.keys(predMap).length)
     }
   }, [player, allPredictions])
 
