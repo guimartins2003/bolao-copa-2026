@@ -236,6 +236,8 @@ export default function Home() {
           {loginStep === 'name' && (
             <form onSubmit={handleNameSubmit} className="space-y-4">
               <input
+                id="playerName"
+                name="playerName"
                 type="text"
                 placeholder="Seu nome"
                 value={playerName}
@@ -262,6 +264,8 @@ export default function Home() {
                 }
               </p>
               <input
+                id="playerPassword"
+                name="playerPassword"
                 type="password"
                 placeholder={loginStep === 'password-register' ? 'Crie uma senha' : 'Sua senha'}
                 value={playerPassword}
@@ -418,6 +422,8 @@ export default function Home() {
                       ) : (
                         <div className="flex items-center gap-2">
                           <input
+                            id={`score-home-${match.id}`}
+                            name={`score-home-${match.id}`}
                             type="text"
                             inputMode="numeric"
                             maxLength={2}
@@ -428,6 +434,8 @@ export default function Home() {
                           />
                           <span className="text-gray-400 font-bold">x</span>
                           <input
+                            id={`score-away-${match.id}`}
+                            name={`score-away-${match.id}`}
                             type="text"
                             inputMode="numeric"
                             maxLength={2}
