@@ -64,8 +64,10 @@ export default function Home() {
       myPreds.forEach(p => {
         predMap[p.match_id] = { home: String(p.home_score), away: String(p.away_score) }
       })
+      console.log('🗺️ Mapa de palpites:', predMap)
       setPredictions(predMap)
       setSavedPredictions(myPreds)
+      console.log('✅ Estado atualizado! predictions.length:', Object.keys(predMap).length)
     }
   }, [player, allPredictions])
 
